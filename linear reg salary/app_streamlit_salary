@@ -1,0 +1,41 @@
+import numpy as np
+import pickle
+import pandas as pd
+import streamlit as st 
+
+# Load the model
+pickle_in = open(r"C:\Users\ajcho\OneDrive\Desktop\full stack data science and AI\BY SELF\ML\ML self\linear_salary_model.pkl", "rb")
+classifier = pickle.load(pickle_in)
+
+def predict_salary(YearsExperience):
+    """Predict salary based on years of experience"""
+    prediction = classifier.predict([[YearsExperience]])
+    return prediction
+
+def main():
+    st.title("Salary Prediction App")
+
+    html_temp = """
+    <div style="background-color:tomato;padding:10px">
+    <h2 style="color:white;text-align:center;">Streamlit Salary ML App</h2>
+    </div>
+    """
+    st.markdown(html_temp, unsafe_allow_html=True)
+
+    # User input
+    YearsExperience = st.text_input("Enter Years of Experience", "")
+
+    result = ""
+    if st.button("Predict"):
+        try:
+            result = predict_salary(float(YearsExperience))
+            st.success(f'The predicted salary is ${result[0]:,.2f}')
+        except ValueError:
+            st.error("Please enter a valid number.")
+
+    if st.button("About"):
+        st.text("Let's Learn!")
+        st.text("This app predicts salary based on years of experience.")
+
+if __name__ == '__main__':
+    main()
